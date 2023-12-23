@@ -15,11 +15,11 @@
       ```
       docker run -d --name myjenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -u root jenkins/jenkins:lts
       ```
-      -d: Runs the container in the background (detached mode).
-      -p 8080:8080: Maps the container's port 8080 to the host's port 8080 (Jenkins web interface).
-      -p 50000:50000: Maps the container's port 50000 to the host's port 50000 (Jenkins agent communication port).
-      --name myjenkins: Assigns a name to the container, in this case, "myjenkins".
-      -v jenkins_home:/var/jenkins_home: Saves jenkins runtime data on host machine so when container is shutdown or deleted its data and progress is saved and reusable on new container
+      - -d: Runs the container in the background (detached mode).
+      - -p 8080:8080: Maps the container's port 8080 to the host's port 8080 (Jenkins web interface).
+      - -p 50000:50000: Maps the container's port 50000 to the host's port 50000 (Jenkins agent communication port).
+      - --name myjenkins: Assigns a name to the container, in this case, "myjenkins".
+      - -v jenkins_home:/var/jenkins_home: Saves jenkins runtime data on host machine so when container is shutdown or deleted its data and progress is saved and reusable on new container
 
   3. Access Jenkins:
       You can access the Jenkins web interface by opening a web browser and navigating to http://localhost:8080. The initial setup process requires obtaining the initial administrator password, which can be obtained by below command:
