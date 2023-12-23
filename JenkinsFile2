@@ -1,0 +1,35 @@
+pipeline{
+    agent any
+    stages {
+        stage("Clean Up"){
+            steps{
+                deleteDir()
+            }
+        }
+        stage("Clone Repo"){
+            steps{
+                sh "git clone https://github.com/dockersamples/example-voting-app.git"
+            }
+        }
+        stage("Build"){
+            steps{
+                dir("example-voting-app"){
+                    sh "apt-get update && apt-get install python3-full -y" 
+                    sh "apt-get install python3-pip -y"
+                    sh "apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*"
+                    sh "pip install Flask --break-system-packages"
+                    sh "pip install watchdog --break-system-packages"
+                    sh "pip install Redis --break-system-packages"
+                    sh "pip install gunicorn --break-system-packages"
+                }
+            }
+        }
+        stage("Test"){
+            steps{
+                dir("example-voting-app/vote"){
+                      sh "python3 app.py"
+                }
+            }
+        }
+    }
+}
