@@ -2,16 +2,16 @@
   Running Jenkins inside a Docker container is a common practice that provides a consistent and isolated environment for Jenkins.
 
   ## Prerequisites
-    - Ubuntu installed on VMware
-    - Docker installed on Ubuntu OS
+  - Ubuntu installed on VMware
+  - Docker installed on Ubuntu OS
 
   ## Setting up Jenkins Container:
-    1. Pull the Jenkins Docker Image from Docker Hub:
+  1. Pull the Jenkins Docker Image from Docker Hub:
       ```
       docker pull jenkins/jenkins:lts
       ```
       
-    2. Run Jenkins Container:
+  2. Run Jenkins Container:
       ```
       docker run -d --name myjenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -u root jenkins/jenkins:lts
       ```
@@ -21,7 +21,7 @@
       --name myjenkins: Assigns a name to the container, in this case, "myjenkins".
       -v jenkins_home:/var/jenkins_home: Saves jenkins runtime data on host machine so when container is shutdown or deleted its data and progress is saved and reusable on new container
 
-    3. Access Jenkins:
+  3. Access Jenkins:
       You can access the Jenkins web interface by opening a web browser and navigating to http://localhost:8080. The initial setup process requires obtaining the initial administrator password, which can be obtained by below command:
        
       ```
@@ -30,11 +30,11 @@
       Copy the password and paste it into the Jenkins web interface to complete the setup. That's it! You should now have Jenkins running inside a Docker container.
 
   ## Getting started with Jenkins:
-    1. Configure Jenkins:
+  1. Configure Jenkins:
       - Choose to install recommended plugins during the initial setup.
       - Create an admin user and provide necessary details.
 
-    2. Create Your First Jenkins Job:
+  2. Create Your First Jenkins Job:
       - Click on "New Item" on the Jenkins dashboard.
       - Enter a name for your project, choose "Freestyle project," and click "OK."
       - Click Add Build Steps. Select Execute Shell.
