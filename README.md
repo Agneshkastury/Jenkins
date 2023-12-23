@@ -1,4 +1,4 @@
-# Jenkins
+![Screenshot (47)](https://github.com/Agneshkastury/Jenkins/assets/154126091/8bc75694-75f3-4d68-b9c8-a8a65dac0c76)![Screenshot (47)](https://github.com/Agneshkastury/Jenkins/assets/154126091/c007b7ec-5b0f-476f-a7bb-8fa21c538d59)# Jenkins
   Running Jenkins inside a Docker container is a common practice that provides a consistent and isolated environment for Jenkins.
 
   ## Prerequisites
@@ -124,12 +124,16 @@
   3. Install required packages in docker to execute maven java app.
       - Use below code:
         ```
-        docker exec -it myjenkins /bin/bash
-        apt-get update
-        apt-get install maven -y
+        docker exec -it myjenkins /bin/bash -c "apt-get update && apt-get install -y maven"
         ```
 
-  3. Run the Pipeline
+         Explanation:
+         - docker exec -it myjenkins /bin/bash: This part starts an interactive Bash shell inside the "myjenkins" Docker container.
+         - -c: This option allows you to pass a command as a string.
+         - "apt-get update && apt-get install -y maven": This is the command string that gets executed inside the container. It updates the package list (apt-get update) and then installs Maven (apt-get install -y maven).
+
+
+  4. Run the Pipeline
       - On the Jenkins dashboard, locate your pipeline project and click on it.
       - Click on "Build Now" to manually trigger the pipeline.
       - Monitor the build progress and view the console output.
@@ -138,8 +142,80 @@
 
      ![Screenshot (44)](https://github.com/Agneshkastury/Jenkins/assets/154126091/4c3d8fe1-a2b8-497d-81b5-4d85b5609ac5)
 
-  4. Customize the Pipeline based on your project requirements. Explore Pipeline Visualization on the project's main page. It helps in understanding the flow of your CI/CD process.
+  5. Customize the Pipeline based on your project requirements. Explore Pipeline Visualization on the project's main page. It helps in understanding the flow of your CI/CD process.
 
      This pipeline performs a series of tasks: cleaning up workspace, cloning a Git repository, building the project, and running tests. Each of these tasks is organized into separate stages to provide a clear structure to the pipeline.
+
+ ## Building Jenkins Pipeline to run "example-voting app"
+ 
+  1. Create a Jenkinsfile:
+     - Create new file named Jenkinsfile. Open the Jenkinsfile and define your pipeline.
+       ```
+       pipeline{
+        agent any
+          stages {
+            stage("Clean Up"){
+              steps{
+                deleteDir()
+              }
+            }
+            stage("Clone Repo"){
+              steps{
+                sh "git clone https://github.com/dockersamples/example-voting-app.git"
+              }
+            }
+            stage("Build"){
+              steps{
+                dir("example-voting-app"){
+                    sh "apt-get update && apt-get install python3-full -y" 
+                    sh "apt-get install python3-pip -y"
+                    sh "apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*"
+                    sh "pip install Flask --break-system-packages"
+                    sh "pip install watchdog --break-system-packages"
+                    sh "pip install Redis --break-system-packages"
+                    sh "pip install gunicorn --break-system-packages"
+                }
+              }
+            }
+            stage("Test"){
+              steps{
+                dir("example-voting-app/vote"){
+                      sh "python3 app.py"
+                }
+              }
+            }
+          }
+        }
+       ```
+
+  2. Configure Jenkins to Use the Pipeline
+      - Open Jenkins in your web browser at http://localhost:8080.
+      - Sign-in using admin and password.
+      - Click on "New Item" on the Jenkins dashboard.
+      - Enter a name for your pipeline (e.g., "My Pipeline").
+      - Choose "Pipeline" as the project type.
+      - Scroll down to the "Pipeline" section and select "Pipeline script" in the Definition dropdown.
+      - Paste your myjenkins pipeline created script in box below.
+      - Save the configuration.
+
+  3. Run the Pipeline
+      - On the Jenkins dashboard, locate your pipeline project and click on it.
+      - Click on "Build Now" to manually trigger the pipeline.
+    
+      ![Screenshot (46)](https://github.com/Agneshkastury/Jenkins/assets/154126091/67511e23-df92-4b86-af89-e75505e55ac0)
+
+      - Monitor the build progress and view the console output.
+
+      ![Screenshot (47)](https://github.com/Agneshkastury/Jenkins/assets/154126091/2ecc1006-99e3-4736-8826-83d55fc314de)
+
+      - Click on hyperlink http://172.17.0.2:80 to cast vote.
+
+      ![Screenshot (48)](https://github.com/Agneshkastury/Jenkins/assets/154126091/75044b25-2e84-459f-aa30-f8aae7ef3e74)
+
+      - Go back to previous page to check the cast vote is received.
+
+      ![Screenshot (49)](https://github.com/Agneshkastury/Jenkins/assets/154126091/3e294474-26d3-45cd-9b19-f61d32e4166f)
+
+  4.   
 
  
